@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ShowSeatRepository extends JpaRepository<ShowSeat, Integer> {
-    List<ShowSeat> findAllByShowId(List<Long> showId);
+public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
+    List<ShowSeat> findAllByShowIdIn(List<Long> showId);
 }

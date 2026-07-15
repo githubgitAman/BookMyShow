@@ -61,7 +61,7 @@ public class BookingService {
 
         Show show = showOptional.get();
 
-        List<ShowSeat> showSeats = showSeatRepository.findAllByShowId(showSeatIds);
+        List<ShowSeat> showSeats = showSeatRepository.findAllByShowIdIn(showSeatIds);
 
         for(ShowSeat showSeat : showSeats) {
             boolean isAvailable = showSeat.getShowSeatStatus() == SHOWSEATSTATUS.AVAILABLE;
@@ -89,7 +89,7 @@ public class BookingService {
         booking.setBookingDate(new Date());
         booking.setShowSeats(showSeats);
         booking.setShow(show);
-        booking.setAmount(priceCalculatorService.calculatePrice());
+        booking.setAmount(priceCalculatorService.calculatePrice(show, showSeats));
 
         //Saving to DB
         return bookingRepository.save(booking);
