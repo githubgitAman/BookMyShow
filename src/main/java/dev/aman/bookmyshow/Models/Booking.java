@@ -23,7 +23,7 @@ public class Booking extends BaseModel{
     private Show show;
     //If user cancels then same show seat can be booked again
     @ManyToMany
-    private List<ShowSeat> seats;
+    private List<ShowSeat> showSeats;
     @OneToMany
     private List<Payment> payments;
 }
