@@ -21,14 +21,6 @@ A highly scalable backend service for a movie ticket booking platform, handling 
 
 To prevent the "double-booking" problem where multiple users attempt to book the exact same seat simultaneously, this system implements a strict concurrency control mechanism:
 
-### 1. Temporary Seat Locking (Distributed Cache)
-When a user selects a seat and proceeds to payment, the system applies a **Distributed Lock (e.g., Redis)** for a fixed TTL (Time-To-Live), typically 10 minutes. 
-* **State Change:** The seat status changes from `AVAILABLE` to `LOCKED`.
-* **Exclusivity:** If User B tries to select a seat locked by User A, the system immediately rejects the request.
-* **Timeout:** If User A's payment fails or times out, the lock expires, and the seat reverts to `AVAILABLE`.
-
-### 2. Database-Level Isolation (Pessimistic Locking)
-For the final transaction commit, row-level locking ensures absolute data consistency.
-* During the final booking transaction, a `SELECT ... FOR UPDATE` query is executed.
-* This guarantees that even if cache-level locks fail, the database prevents concurrent transactions from modifying the same seat row simultaneously. 
-* **Optimistic Locking** (using version numbers) is used for less critical read/write entities to maintain high throughput.
+🔒 Handling Concurrency (Seat Locking Mechanism)
+1. To prevent the "double-booking" problem where multiple users attempt to book the exact same seat simultaneously, this system implements a strict concurrency control mechanism using Spring's @Transactional annotation.
+2. This ensures that the seat locking and booking database operations are executed within a single, isolated transaction. If two users try to book the same seat, the transaction isolation prevents both from succeeding, rolling back the overlapping request and maintaining data integrity.
